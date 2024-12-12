@@ -39,7 +39,6 @@ export class UsersController {
   ) {
     return this.userService.updateUser(+id, updateUserInput);
   }
-
   //public everyone can create account
   @Public()
   @Post()
