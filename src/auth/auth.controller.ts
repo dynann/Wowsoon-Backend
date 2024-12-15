@@ -7,19 +7,46 @@ import {
   UseGuards,
   Request,
   Get,
+  HttpException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 import { Public } from './constant';
+import { PrismaService } from 'src/prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private prisma: PrismaService,
+  ) {}
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
+  async signIn(@Body() signInDto: Record<string, any>) {
     console.log(signInDto);
-    return this.authService.SignIn(signInDto.username, signInDto.password);
+    const { password, username } = signInDto;
+    //find user
+    const user = await this.prisma.user.findFirst({
+      where: {
+        username: username,
+      },
+      select: {
+        id: true,
+        username: true,
+        password: true,
+      },
+    });
+    console.log(user);
+    if (!user) {
+      throw new HttpException('account does not exist', HttpStatus.NOT_FOUND);
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (isMatch) {
+      return this.authService.SignIn(signInDto.username, user.password);
+    } else {
+      throw new HttpException('wrong credentials', HttpStatus.UNAUTHORIZED);
+    }
   }
 
   @UseGuards(AuthGuard)

@@ -40,7 +40,7 @@ export class UsersController {
     return this.userService.updateUser(+id, updateUserInput);
   }
   //public everyone can create account
-  // @Public()
+  @Public()
   @Post()
   async createUser(@Body() userData: Prisma.UserCreateInput) {
     return this.userService.createUser(userData);
