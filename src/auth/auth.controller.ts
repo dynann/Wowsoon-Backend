@@ -41,7 +41,7 @@ export class AuthController {
     if (!user) {
       throw new HttpException('account does not exist', HttpStatus.NOT_FOUND);
     }
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch: boolean = await bcrypt.compare(password, user.password);
     if (isMatch) {
       return this.authService.SignIn(signInDto.username, user.password);
     } else {
