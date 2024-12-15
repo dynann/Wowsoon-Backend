@@ -14,7 +14,7 @@ export class AppController {
 
   @Get()
   @Roles('ADMIN')
-  async getAllAdmin(@Param('ADMIN') id: string) {
-    return this.appService.getOneAdmin(+id);
+  async getAllAdmin() {
+    return this.appService.getAllAdmin();
   }
 }

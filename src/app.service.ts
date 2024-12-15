@@ -6,10 +6,6 @@ import { User } from '@prisma/client';
 export class AppService {
   constructor(private prisma: PrismaService) {}
 
-  getHello(): string {
-    return 'Hello World!';
-  }
-
   //write this method that allow only admin reputation to
   //retrieve admin users role
 
