@@ -14,6 +14,9 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { RolesGuard } from 'roles.guard';
+import { ConfigModule } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
+import { GoogleAuthGuard } from './auth/google-oauth.guard';
 
 @Module({
   imports: [
@@ -26,6 +29,8 @@ import { RolesGuard } from 'roles.guard';
     OrderItemModule,
     FoodModule,
     AuthModule,
+    ConfigModule.forRoot(),
+    PassportModule,
   ],
   controllers: [AppController],
   providers: [
@@ -33,6 +38,7 @@ import { RolesGuard } from 'roles.guard';
     PrismaService,
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_GUARD, useClass: GoogleAuthGuard },
   ],
   exports: [AppService],
 })

@@ -8,6 +8,7 @@ import {
   Request,
   Get,
   HttpException,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
@@ -41,12 +42,25 @@ export class AuthController {
     if (!user) {
       throw new HttpException('account does not exist', HttpStatus.NOT_FOUND);
     }
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch: boolean = await bcrypt.compare(password, user.password);
     if (isMatch) {
       return this.authService.SignIn(signInDto.username, user.password);
     } else {
       throw new HttpException('wrong credentials', HttpStatus.UNAUTHORIZED);
     }
+  }
+
+  @Public()
+  @Get('google')
+  googleAuth() {}
+
+  @Public()
+  @Get('google/redirect')
+  googleAuthRedirect(@Req() req) {
+    return {
+      message: 'user from google',
+      user: req.user,
+    };
   }
 
   @UseGuards(AuthGuard)
