@@ -8,6 +8,7 @@ import {
   Request,
   Get,
   HttpException,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
@@ -47,6 +48,19 @@ export class AuthController {
     } else {
       throw new HttpException('wrong credentials', HttpStatus.UNAUTHORIZED);
     }
+  }
+
+  @Public()
+  @Get('google')
+  googleAuth() {}
+
+  @Public()
+  @Get('google/redirect')
+  googleAuthRedirect(@Req() req) {
+    return {
+      message: 'user from google',
+      user: req.user,
+    };
   }
 
   @UseGuards(AuthGuard)
