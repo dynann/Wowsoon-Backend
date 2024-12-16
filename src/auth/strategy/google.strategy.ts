@@ -4,14 +4,12 @@ import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 import * as dotenv from 'dotenv';
 dotenv.config();
 @Injectable()
-
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor() {
     super({
-      clientID:
-        '955796442734-10nouqkt8c2j3e7ocbmk0b5hlqtmslah.apps.googleusercontent.com',
-      clientSecret: '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',
-      callbackURL: 'http://localhost:3000/auth/google/redirect',
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_CALLBACK_URI,
       scope: ['email', 'profile'],
     });
   }
