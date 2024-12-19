@@ -3,7 +3,7 @@ import { FoodController } from './food.controller';
 import { FoodService } from './food.service';
 import { RolesGuard } from 'roles.guard';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuardCre } from 'src/auth/auth.guard';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Module({
@@ -11,7 +11,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
   providers: [
     FoodService,
     PrismaService,
-    { provide: APP_GUARD, useClass: AuthGuard },
+    { provide: APP_GUARD, useClass: AuthGuardCre },
     { provide: APP_GUARD, useClass: RolesGuard },
   ],
   exports: [FoodService],

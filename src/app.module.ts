@@ -12,11 +12,12 @@ import { FoodModule } from './food/food.module';
 import { PrismaService } from './prisma/prisma.service';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './auth/auth.guard';
+import { AuthGuardCre } from './auth/auth.guard';
 import { RolesGuard } from 'roles.guard';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
-import { GoogleAuthGuard } from './auth/google-oauth.guard';
+import { AuthController } from './auth/auth.controller';
+import { GoogleStrategy } from './auth/strategy/google.strategy';
 
 @Module({
   imports: [
@@ -32,13 +33,13 @@ import { GoogleAuthGuard } from './auth/google-oauth.guard';
     ConfigModule.forRoot(),
     PassportModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, AuthController],
   providers: [
     AppService,
     PrismaService,
-    { provide: APP_GUARD, useClass: AuthGuard },
+    { provide: APP_GUARD, useClass: AuthGuardCre },
     { provide: APP_GUARD, useClass: RolesGuard },
-    { provide: APP_GUARD, useClass: GoogleAuthGuard },
+    GoogleStrategy,
   ],
   exports: [AppService],
 })

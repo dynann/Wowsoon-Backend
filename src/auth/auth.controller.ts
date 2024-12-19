@@ -11,14 +11,15 @@ import {
   Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from './auth.guard';
+import { AuthGuardCre } from './auth.guard';
 import { Public } from './constant';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { GoogleAuthGuard } from './google.guard';
 @Controller('auth')
 export class AuthController {
   constructor(
-    private authService: AuthService,
+    private  authService: AuthService,
     private prisma: PrismaService,
   ) {}
   @Public()
@@ -50,20 +51,36 @@ export class AuthController {
     }
   }
 
-  @Public()
-  @Get('google')
-  googleAuth() {}
+
+  @Post('refresh')
+  @UseGuards(AuthGuardCre)
+  async refresh(@Body() body: { refresh_token: string }) {
+    console.log(body.refresh_token);
+    const token = await this.authService.refreshToken(body.refresh_token);
+    return token;
+  }
+
 
   @Public()
-  @Get('google/redirect')
+  @Get('/google')
+  @UseGuards(GoogleAuthGuard)
+  googleAuth() {
+    console.log('google is triggered');
+  }
+
+
+  @Public()
+  @Get('/google/redirect')
+  @UseGuards(GoogleAuthGuard)
   googleAuthRedirect(@Req() req) {
+    console.log('google is triggered');
     return {
       message: 'user from google',
       user: req.user,
     };
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuardCre)
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
