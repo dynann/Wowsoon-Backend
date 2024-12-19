@@ -1,7 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
-import { jwtConstants } from './constant';
 import * as dotenv from 'dotenv';
 dotenv.config();
 @Injectable()

@@ -19,7 +19,7 @@ import { GoogleAuthGuard } from './google.guard';
 @Controller('auth')
 export class AuthController {
   constructor(
-    private  authService: AuthService,
+    private authService: AuthService,
     private prisma: PrismaService,
   ) {}
   @Public()
@@ -51,7 +51,6 @@ export class AuthController {
     }
   }
 
-
   @Post('refresh')
   @UseGuards(AuthGuardCre)
   async refresh(@Body() body: { refresh_token: string }) {
@@ -60,14 +59,12 @@ export class AuthController {
     return token;
   }
 
-
   @Public()
   @Get('/google')
   @UseGuards(GoogleAuthGuard)
   googleAuth() {
     console.log('google is triggered');
   }
-
 
   @Public()
   @Get('/google/redirect')
