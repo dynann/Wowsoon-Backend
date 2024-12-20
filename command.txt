@@ -1,0 +1,16 @@
+to create new nestJS project 
+-- nest new <project name>
+-- nest g module <module name> : generate module
+-- nest g service <module name> : generate service 
+-- nest g controller <module name> : generate controller 
+-- nest g resource <resource name> generate full api configuration 
+
+prisma : CLI migration 
+-- npx prisma migrate dev --name <migration_name> : Generate a migration file in the prisma/migrations directory. Apply the migration to your local database.
+-- npx prisma migrate deploy : apply the migration in production 
+Command	Purpose
+-- npx prisma migrate dev :	Create and apply a migration locally.
+-- npx prisma migrate deploy : Apply all pending migrations to the production database.
+-- npx prisma migrate reset : 	Reset the database and reapply all migrations locally.
+-- npx prisma db seed : Seed the database using a predefined script.
+-- npx prisma generate: Generate the Prisma Client after schema changes (automatic with migrations).

@@ -14,90 +14,114 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  username String 
-  email String @unique
-  phone String @unique
-  password String 
-  address String 
-  orders Order[]
-  ratings Rating[]
+  id                  Int                  @id @default(autoincrement())
+  username            String
+  email               String               @unique
+  phone               String               @unique
+  password            String
+  address             String
+  orders              Order[]
+  ratings             Rating[]
   favorite_restaurant FavoriteRestaurant[]
-  roles Role @default(USER)
+  roles               Role                 @default(USER)
+  Review              Review[]
+  PastOrder           PastOrder[]
 }
+
 enum Role {
   USER
   ADMIN
 }
 
 model Restaurant {
-  id Int @id @default(autoincrement())
-  name String
-  address String
+  id        Int         @id @default(autoincrement())
+  name      String
+  address   String
   openHours String
-  foods Food[]
-  ratings Rating[]
-  offers Offer[]
-  Order Order[]
+  foods     Food[]
+  ratings   Rating[]
+  offers    Offer[]
+  Order     Order[]
+  Review    Review[]
+  PastOrder PastOrder[]
 }
 
 model Food {
-  id Int @id @default(autoincrement())
+  id           Int         @id @default(autoincrement())
   restaurantId Int
-  name String
-  price Int
-  description String
+  name         String
+  price        Int
+  description  String
   availability Boolean
-  restaurant Restaurant @relation(fields: [restaurantId], references: [id])
-  orderItems OrderItem[]
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
+  orderItems   OrderItem[]
 }
 
 model Order {
-  id Int @id @default(autoincrement())
-  userId Int
-  restaurantId Int 
-  totalPrice Float
-  status String
-  orderDate DateTime @default(now())
-  user User @relation(fields: [userId], references: [id])
-  restaurant Restaurant @relation(fields: [restaurantId], references: [id])
-  orderItems OrderItem[]
+  id           Int         @id @default(autoincrement())
+  userId       Int
+  restaurantId Int
+  totalPrice   Float
+  status       String
+  orderDate    DateTime    @default(now())
+  user         User        @relation(fields: [userId], references: [id])
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
+  orderItems   OrderItem[]
+  pastOrder    PastOrder?  @relation()
 }
 
-model OrderItem { 
-  id Int @id @default(autoincrement())
-  orderId Int 
-  foodId Int 
-  quantity Int 
+model OrderItem {
+  id       Int   @id @default(autoincrement())
+  orderId  Int
+  foodId   Int
+  quantity Int
   subtotal Float
-  order Order @relation(fields: [orderId], references: [id])
-  item Food @relation(fields: [foodId], references: [id])
+  order    Order @relation(fields: [orderId], references: [id])
+  item     Food  @relation(fields: [foodId], references: [id])
 }
 
 model Rating {
-  id Int @id @default(autoincrement())
-  userId Int 
-  restaurantId Int 
-  ratingValue Int 
-  comment String?
-  user User @relation(fields: [userId], references: [id])
-  restaurant Restaurant @relation(fields: [restaurantId], references: [id])
+  id           Int        @id @default(autoincrement())
+  userId       Int
+  restaurantId Int
+  ratingValue  Int
+  comment      String?
+  user         User       @relation(fields: [userId], references: [id])
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
 }
 
-model FavoriteRestaurant{
-   id Int @id @default(autoincrement())
-   userId Int 
-   restaurantId Int 
-   user User @relation(fields: [userId], references: [id])
+model FavoriteRestaurant {
+  id           Int  @id @default(autoincrement())
+  userId       Int
+  restaurantId Int
+  user         User @relation(fields: [userId], references: [id])
 }
 
 model Offer {
-  id Int @id @default(autoincrement())
-  restaurantID Int 
-  description String
-  discountPercentage Float 
-  validFrom DateTime
-  validTo DateTime
-  restaurant Restaurant @relation(fields: [restaurantID], references: [id])
+  id                 Int        @id @default(autoincrement())
+  restaurantID       Int
+  description        String
+  discountPercentage Float
+  validFrom          DateTime
+  validTo            DateTime
+  restaurant         Restaurant @relation(fields: [restaurantID], references: [id])
 }
 
+model Review {
+  id           Int        @id @default(autoincrement())
+  userId       Int
+  restaurantId Int
+  review       String
+  user         User       @relation(fields: [userId], references: [id])
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+}
+
+model PastOrder {
+  id           Int        @id @default(autoincrement())
+  userId       Int
+  restaurantId Int
+  orderId      Int        @unique
+  user         User       @relation(fields: [userId], references: [id])
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  order        Order      @relation(fields: [orderId], references: [id])
+}
