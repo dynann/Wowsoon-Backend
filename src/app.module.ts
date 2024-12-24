@@ -18,6 +18,10 @@ import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth/auth.controller';
 import { GoogleStrategy } from './auth/strategy/google.strategy';
+import { DriversModule } from './drivers/drivers.module';
+import { PastOrdersModule } from './past-orders/past-orders.module';
+import { ReviewsModule } from './reviews/reviews.module';
+import { PaymentMethodsModule } from './payment-methods/payment-methods.module';
 
 @Module({
   imports: [
@@ -32,6 +36,10 @@ import { GoogleStrategy } from './auth/strategy/google.strategy';
     AuthModule,
     ConfigModule.forRoot(),
     PassportModule,
+    DriversModule,
+    PastOrdersModule,
+    ReviewsModule,
+    PaymentMethodsModule,
   ],
   controllers: [AppController, AuthController],
   providers: [

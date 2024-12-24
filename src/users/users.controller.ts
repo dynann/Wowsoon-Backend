@@ -15,7 +15,7 @@ import { Roles } from 'roles.decorator';
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
   @Get()
-  @Roles('ADMIN')
+  @Roles('USER', 'ADMIN')
   async findAllUsers() {
     return this.userService.getAllUsers();
   }
@@ -41,7 +41,7 @@ export class UsersController {
   }
   //public everyone can create account
   @Public()
-  @Post()
+  @Post('/create-account')
   async createUser(@Body() userData: Prisma.UserCreateInput) {
     return this.userService.createUser(userData);
   }

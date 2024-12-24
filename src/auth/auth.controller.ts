@@ -1,3 +1,4 @@
+import { isEmail } from './../../node_modules/@types/validator/index.d';
 import {
   Body,
   Controller,
@@ -27,15 +28,15 @@ export class AuthController {
   @Post('login')
   async signIn(@Body() signInDto: Record<string, any>) {
     console.log(signInDto);
-    const { password, username } = signInDto;
+    const { password, email } = signInDto;
     //find user
-    const user = await this.prisma.user.findFirst({
+    const user = await this.prisma.user.findUnique({
       where: {
-        username: username,
+        email,
       },
       select: {
         id: true,
-        username: true,
+        email: true,
         password: true,
       },
     });
@@ -45,7 +46,7 @@ export class AuthController {
     }
     const isMatch: boolean = await bcrypt.compare(password, user.password);
     if (isMatch) {
-      return this.authService.SignIn(signInDto.username, user.password);
+      return this.authService.SignIn(signInDto.email, user.password);
     } else {
       throw new HttpException('wrong credentials', HttpStatus.UNAUTHORIZED);
     }
