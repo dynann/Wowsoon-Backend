@@ -7,8 +7,10 @@ export class RestaurantsService {
   constructor(private prisma: PrismaService) {}
 
   //getAllRestaurant
-  async getAllRestaurant() {
-    return this.prisma.restaurant.findMany();
+  async getAllRestaurant(): Promise<Restaurant[]> {
+    const restaurant = await this.prisma.restaurant.findMany();
+    console.log(restaurant);
+    return restaurant;
   }
 
   //getOneUser

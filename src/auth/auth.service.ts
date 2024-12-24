@@ -9,9 +9,9 @@ export class AuthService {
     private userService: UsersService,
     private jwtService: JwtService,
   ) {}
-  async SignIn(username: string, pass: string): Promise<any> {
+  async SignIn(email: string, pass: string): Promise<any> {
     const users = await this.userService.getAllUsers();
-    const user = users.find((user) => user.username === username);
+    const user = users.find((user) => user.email === email);
     if (!user || user.password !== pass) {
       throw new UnauthorizedException();
     }
@@ -19,7 +19,7 @@ export class AuthService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const payload = {
       sub: user.id,
-      username: user.username,
+      email: user.email,
       roles: user.roles,
     };
     console.log(payload);
@@ -47,7 +47,7 @@ export class AuthService {
       console.log(user);
       return this.generateToken({
         sub: user.id,
-        username: user.username,
+        email: user.email,
         roles: user.roles,
       });
     } catch (error) {

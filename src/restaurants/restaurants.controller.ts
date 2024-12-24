@@ -16,20 +16,21 @@ export class RestaurantsController {
   constructor(private readonly restaurantService: RestaurantsService) {}
 
   @Get()
-  @Roles('ADMIN')
+  @Roles('USER', 'ADMIN')
   async findAllRestaurants() {
     return this.restaurantService.getAllRestaurant();
   }
 
   @Get('/:id')
-  @Roles('ADMIN')
+  @Roles('USER')
   async findOneRestaurant(@Param('id') id: string) {
     return this.restaurantService.getOneRestaurant(+id);
   }
 
   @Post()
-  @Roles('ADMIN')
+  @Roles('USER')
   async createOneRestaurant(@Body() data: Prisma.RestaurantCreateInput) {
+    console.log('create');
     return this.restaurantService.createRestaurant(data);
   }
 
