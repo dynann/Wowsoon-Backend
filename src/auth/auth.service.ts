@@ -2,12 +2,15 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import * as dotenv from 'dotenv';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { User } from '@prisma/client';
 dotenv.config();
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UsersService,
     private jwtService: JwtService,
+    private prisma: PrismaService,
   ) {}
   async SignIn(email: string, pass: string): Promise<any> {
     const users = await this.userService.getAllUsers();
@@ -54,5 +57,32 @@ export class AuthService {
       console.log(error);
       throw new UnauthorizedException();
     }
+  }
+
+  //generate impersonated access token
+  async generateImpersonationToken(adminId: number, targetUserId: number) {
+    const targetUser = await this.prisma.user.findUnique({
+      where: {
+        id: targetUserId,
+      },
+    });
+    if (!targetUser) {
+      throw new UnauthorizedException("User doesn't not exist");
+    }
+    console.log(targetUser);
+    const payload = {
+      id: adminId,
+      impersonatedUserId: targetUserId,
+      roles: ['ADMIN'],
+    };
+    return this.jwtService.sign(payload, { expiresIn: '1h' });
+  }
+
+  //get user impersonate profile
+  async getImpersonateProfile(userId: number): Promise<User> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+    return user;
   }
 }

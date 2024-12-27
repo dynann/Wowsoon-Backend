@@ -1,4 +1,3 @@
-import { isEmail } from './../../node_modules/@types/validator/index.d';
 import {
   Body,
   Controller,
@@ -10,6 +9,7 @@ import {
   Get,
   HttpException,
   Req,
+  Param,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuardCre } from './auth.guard';
@@ -17,6 +17,7 @@ import { Public } from './constant';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { GoogleAuthGuard } from './google.guard';
+import { Roles } from 'roles.decorator';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -52,12 +53,27 @@ export class AuthController {
     }
   }
 
+  //refresh token
   @Post('refresh')
   @UseGuards(AuthGuardCre)
   async refresh(@Body() body: { refresh_token: string }) {
     console.log(body.refresh_token);
     const token = await this.authService.refreshToken(body.refresh_token);
     return token;
+  }
+
+  //impersonate token
+  @Post('impersonate/:userId')
+  @UseGuards(AuthGuardCre)
+  @Roles('ADMIN')
+  async impersonate(@Param('userId') userId: string, @Req() req: any) {
+    const adminId = req.user.id;
+    return {
+      token: await this.authService.generateImpersonationToken(
+        +adminId,
+        +userId,
+      ),
+    };
   }
 
   @Public()
@@ -78,9 +94,10 @@ export class AuthController {
     };
   }
 
+  //get user impersonate profile
   @UseGuards(AuthGuardCre)
   @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  getImpersonateProfile(@Request() req) {
+    return this.authService.getImpersonateProfile(req.user.id);
   }
 }

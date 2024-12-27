@@ -13,6 +13,7 @@ export class RolesGuard implements CanActivate {
     }
     const { user } = context.switchToHttp().getRequest();
     console.log('User in RolesGuard:', user);
+    console.log(user.roles)
     if (!user || !user.roles) {
       console.error('User or roles property is missing');
       return false;
