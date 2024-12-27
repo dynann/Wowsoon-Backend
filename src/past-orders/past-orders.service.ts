@@ -37,4 +37,18 @@ export class PastOrdersService {
       data: data,
     });
   }
+
+  async createPastOrder(data: {
+    orderId: number;
+    userId: number;
+    restaurantId: number;
+  }) {
+    return this.prisma.pastOrder.create({
+      data: {
+        orderId: data.orderId,
+        userId: data.userId,
+        restaurantId: data.restaurantId,
+      },
+    });
+  }
 }

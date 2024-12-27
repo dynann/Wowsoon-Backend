@@ -25,6 +25,12 @@ export class UsersController {
     return this.userService.getOneUser(+id);
   }
 
+  @Get('/:id/past-order')
+  @Roles('USER', 'ADMIN')
+  async getPastOrders(@Param('id') id: number) {
+    return this.userService.getPastOrder(+id);
+  }
+
   @Delete('/:id')
   @Roles('USER', 'ADMIN')
   async deleteOneUser(@Param('id') id: string) {

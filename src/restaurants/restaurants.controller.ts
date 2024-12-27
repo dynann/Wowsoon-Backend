@@ -48,4 +48,17 @@ export class RestaurantsController {
   async deleteRestaurant(@Param('id') id: string) {
     return this.restaurantService.removeRestaurant(+id);
   }
+
+  @Get('/average-rating/:id')
+  @Roles('ADMIN')
+  async getAverageRating(@Param('id') id: string) {
+    return this.restaurantService.calculateAverageRating(+id);
+  }
+
+  @Get('/:id/items')
+  @Roles('ADMIN')
+  async getItems(@Param('id') id: string) {
+    const items = await this.restaurantService.getItems(+id);
+    return items;
+  }
 }
