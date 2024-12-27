@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Prisma, Restaurant } from '@prisma/client';
+import { Food, Prisma, Restaurant } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -56,5 +56,27 @@ export class RestaurantsService {
     return this.prisma.restaurant.delete({
       where: { id },
     });
+  }
+
+  async calculateAverageRating(restaurantId: number): Promise<number> {
+    const ratings = await this.prisma.rating.findMany({
+      where: { restaurantId },
+    });
+    if (ratings.length === 0) {
+      throw new HttpException(
+        'No ratings found for this restaurant',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    const total = ratings.reduce((sum, rating) => sum + rating.ratingValue, 0);
+    return total / ratings.length;
+  }
+
+  //get foods from restaurant
+  async getItems(restaurantId: number): Promise<Food[]> {
+    const foods = await this.prisma.food.findMany({
+      where: { restaurantId },
+    });
+    return foods;
   }
 }

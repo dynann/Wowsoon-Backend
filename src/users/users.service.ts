@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Prisma, User } from '@prisma/client';
+import { PastOrder, Prisma, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import * as validator from 'validator';
@@ -119,5 +119,15 @@ export class UsersService {
 
   private isPasswordStrong(password: string): boolean {
     return password.length >= 8;
+  }
+
+  async getPastOrder(id: number): Promise<PastOrder[] | null> {
+    const users = await this.prisma.user.findUnique({
+      where: { id: id },
+      select: {
+        PastOrder: true,
+      },
+    });
+    return users.PastOrder;
   }
 }

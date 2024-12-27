@@ -70,7 +70,6 @@ model Order {
   restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
   orderItems   OrderItem[]
   pastOrder    PastOrder?  @relation()
-  
 }
 
 model OrderItem {

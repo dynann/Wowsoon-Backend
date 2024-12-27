@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Roles } from 'roles.decorator';
 import { DriversService } from './drivers.service';
@@ -11,6 +19,12 @@ export class DriversController {
   @Roles('ADMIN', 'USER')
   async findAllDrivers() {
     return this.driversService.findAllDrivers();
+  }
+
+  @Post()
+  @Roles('ADMIN')
+  async createDriver(@Body() data: Prisma.DriverCreateInput) {
+    return this.driversService.createDriver(data);
   }
 
   @Get('/:id')
