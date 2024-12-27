@@ -20,19 +20,20 @@ export class UsersController {
     return this.userService.getAllUsers();
   }
   @Get('/:id')
-  @Roles('USER')
+  @Roles('USER', 'ADMIN')
   async findOneUser(@Param('id') id: string) {
     return this.userService.getOneUser(+id);
   }
 
   @Delete('/:id')
+  @Roles('USER', 'ADMIN')
   async deleteOneUser(@Param('id') id: string) {
     return this.userService.removeOneUser(+id);
   }
 
   //patch request
   @Patch('/:id')
-  @Roles('USER')
+  @Roles('USER', 'ADMIN')
   async updateUser(
     @Param('id') id: string,
     @Body() updateUserInput: Prisma.UserUpdateInput,

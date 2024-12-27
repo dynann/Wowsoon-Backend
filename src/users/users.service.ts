@@ -85,7 +85,6 @@ export class UsersService {
     if (!user) {
       throw new HttpException('user not found', HttpStatus.NOT_FOUND);
     }
-
     //find existing email first
     if (data.email && data.email !== user.email) {
       const existingUser = await this.prisma.user.findUnique({
